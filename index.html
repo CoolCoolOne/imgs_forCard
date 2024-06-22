@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Game Card</title>
+	<!-- <link rel="stylesheet" href="main.css" /> -->
+</head>
+
+
+
+<body>
+
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		/* body {
+			font-family: montserrat, sans-serif;
+			width: 100%;
+			min-height: 100vh;
+			margin-bottom: 1000px;
+		} */
+
+		.card {
+			margin-left: auto;
+			margin-right: auto;
+			/* width: 282px;
+			height: 512px; */
+			width: 85%;
+			/* min-height: 80vh; */
+			height: 75vh;
+			/* height: 512px; */
+			perspective: 1000px;
+			margin-bottom: 10vh;
+		}
+
+		.card__inner {
+			width: 100%;
+			height: 100%;
+			transition: transform 2.2s;
+			transform-style: preserve-3d;
+			cursor: pointer;
+			position: relative;
+		}
+
+		.fastRotate {
+			transition: transform 0.8s;
+		}
+
+		.card__inner.is-flipped {
+			transform: rotateY(180deg);
+		}
+
+
+		.card__face {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+			overflow: hidden;
+			border-radius: 16px;
+			border: 4px solid rgb(40, 88, 0);
+			box-shadow: 0px 3px 18px 3px rgba(0, 0, 0, 0.2);
+		}
+
+		.card__face--front {
+			background-image: url(https://i123.fastpic.org/big/2024/0621/b6/557db3528939a1f3759d4463bdc763b6.jpg);
+			background-size: cover;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.card__face--back {
+			background-image: url(https://i123.fastpic.org/big/2024/0621/68/94e22d77b391bccf0f38bef9b692f368.jpg);
+			background-size: cover;
+			transform: rotateY(180deg);
+			position: relative;
+		}
+	</style>
+
+	<div class="card">
+		<div class="card__inner">
+			<div class="card__face card__face--front">
+			</div>
+			<div id="cardBack" class="card__face card__face--back">
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let newCardUrl;
+		const originalCards =
+			[
+				"url(https://i123.fastpic.org/big/2024/0621/68/94e22d77b391bccf0f38bef9b692f368.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/04/5e38af54e5d8233c805bb98a1b418904.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/95/baefe68c3a2c14586b7059951a054a95.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/93/1c94ab82ac0d872e7c40f9a936b79593.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/e8/2fe355b7146df8f7f68e2d83e3959de8.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/34/88110c3177a673000f200e28bcbb5b34.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/e1/e29a34b695d05e20bdc58bd069ef42e1.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/59/41b9d60e139c307a95f35ddfadadfe59.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/bb/6e6569c54c1e2e13a3af80a56e50c4bb.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/8c/28420f208c3c666db33fcb517fd0fc8c.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/9a/750e25197eb4bc2aa5b2464f14b5cb9a.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/cc/541e81778fb8c3da4858f5ea4537a2cc.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/87/7a9149ce04772ee385b9a283e6fa4787.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/83/2c166f24e3bba37510dd7b600e2c2083.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/5b/f705b76433e371334e3f36269a378d5b.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/56/891037c46cb7089acabb522a34fd6956.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/7c/1e744ea044f7a344004e516f1167ea7c.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/c1/dfc8be5a2bfa4e0e3a9c7445cd4736c1.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/4f/95402011955aa7a17f4ca84bed8f7b4f.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/23/21926245ee8168b088172afde8557b23.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/dc/6b8bff2f2d7b49d8881ff504787bd5dc.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/84/ca884c83d8021e0c9be573f3046be584.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/6a/9d5cfc971993f94861761156ce26f26a.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/f6/d1c04d3a23107a2958bf5bf6fd9e60f6.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/e6/4438f5ff066898793ac6015b909269e6.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/94/0a8b9351e9bdfd3edf8b7e2c6440f094.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/bc/0f4a851e41076b669de3d6467fd599bc.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/4e/65087244b8b15431e6a9ae6b37929a4e.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/68/d1ab021fd5a17cb75d1cddf7094b2568.jpg)",
+				"url(https://i123.fastpic.org/big/2024/0621/68/d1ab021fd5a17cb75d1cddf7094b2568.jpg)"
+			];
+
+
+		let cards = originalCards.slice();;
+
+
+		const card = document.querySelector(".card__inner");
+		card.addEventListener("click", mainFlipper);
+
+		let classBack = document.getElementById('cardBack');
+		classBack.style.backgroundImage = newCardUrl;
+
+		function mainFlipper() {
+			if (card.classList.contains('is-flipped')) {
+				card.classList.toggle('is-flipped');
+				card.classList.add('fastRotate');
+			} else {
+				card.classList.remove('fastRotate');
+				newCardUrl = idGen(cards.length);
+				classBack.style.backgroundImage = newCardUrl;
+				card.classList.toggle('is-flipped');
+			};
+		}
+
+		function idGen(Cards_length) {
+			let openCardId = getRandomInt(0, Cards_length);
+			let openCardUrl;
+			cards.forEach((element, index) => {
+				if (index === openCardId) {
+					openCardUrl = element;
+					noRepeat(index);
+				}
+			});
+
+			function noRepeat(ind) {
+				if (Cards_length === 1) {
+					cards = originalCards;
+				} else {
+					cards.splice(ind, 1);
+				}
+			}
+
+			function getRandomInt(min, max) {
+				const minCeiled = Math.ceil(min);
+				const maxFloored = Math.floor(max);
+				return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+			}
+			return openCardUrl;
+		};
+	</script>
+
+</body>
+
+
+
+</html>
